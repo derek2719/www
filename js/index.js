@@ -8,13 +8,12 @@
         creatProductListHtml : function(data) {
             var me = this;
             var htmls = ["<div class='a_cont'>"];
-            htmls.push("<a id = 'detailsurl'>");
-            htmls.push("<div class='a_img' ><img src = '" + data.media + "' alt='' width='100%'/></div></a>");
-            htmls.push("<div class='ah_img'>");
+            htmls.push("<div class='a_img' onclick = \"gotoproductdeatils('" + data.publish_id +"');\"><img src = '" + data.media + "' alt='' width='100%'/></div></a>");
+            htmls.push("<div class='ah_img' onclick = \"gotoproductdeatils('" + data.publish_id +"');\">");
             htmls.push("<img src = 'images/ha.jpg' alt='' width='40' height='40'/>");
-            htmls.push("<h3 id = 'detailsurl1'>" + data.title + "</h3>");
+            htmls.push("<h3>" + data.title + "</h3>");
             htmls.push("<p class='a_time'>" + data.fromtime + "</p></div>");
-            htmls.push("<div class='a_text' id = 'detailsurl2'>" + data.content + "</div>");
+            htmls.push("<div class='a_text' onclick = \"gotoproductdeatils('" + data.publish_id +"');\">" + data.content + "</div>");
             htmls.push("<div class='a_xadp'>");
             htmls.push("<a class='dp'>还有" + data.comment_count +"条点评</a>" );
             htmls.push("<a>喜爱35</a>");
@@ -115,7 +114,7 @@
             }
         },
 
-        detailbtnUp : function(evt) {
+        productDetailsbtnUp : function(publishId) {
             location.href = "productdetails.html";
         },
         
@@ -135,7 +134,7 @@
 
     //基础URL
     //var BASE_URL = "http://192.168.1.245:8080/JuaizuoMobileServer/";
-    var BASE_URL = "http://localhost:8080/JuaizuoMobileServer/";
+    var BASE_URL = "http://127.0.0.1:8080/JuaizuoMobileServer/";
     $(function(){
         //请求用户信息协议
         var productList_url = BASE_URL + "ProductList";
@@ -146,6 +145,12 @@
         pm.init();
         //请求产品列表数据，填充用户界面元素
         pm.reqProductList(productList_url, productList_data);
+
+        window.gotoproductdeatils = function(publishId) {
+            if (pm.init) {
+                pm.productDetailsbtnUp(publishId);
+            }
+        };
     });
     
  }(window));

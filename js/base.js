@@ -1,9 +1,9 @@
 (function(window) {
     var global = this;
-    if (typeof Trafficeye === "undefined") {
-        global.Trafficeye = {}
+    if (typeof Juaizuo === "undefined") {
+        global.Juaizuo = {}
     }
-    Trafficeye.global = global;
+    Juaizuo.global = global;
 
     var emptyFn = function() {};
 
@@ -79,7 +79,7 @@
      * opts属性：
      * success ：图片加载成功后的回调函数
      * fail ：图片加载失败后的回调函数
-     * scope ：回调函数的作用域，默认是Trafficeye对象
+     * scope ：回调函数的作用域，默认是Juaizuo对象
      */
     function imageLoaded (imgElem, imgUrl, opts) {
         if (!imgElem) {
@@ -264,12 +264,12 @@
         }
     };
 
-    Trafficeye.imageLoaded = imageLoaded;
-    Trafficeye.queryElemsByIds = queryElemsByIds;
-    Trafficeye.getDateTime = getDateTime;
-    Trafficeye.httpData2Str = httpData2Str;
-    Trafficeye.httpTip = httpTip;
-    Trafficeye.offlineStore = offlineStore;
-    Trafficeye.json2Str = json2Str;
-    Trafficeye.str2Json = str2Json;
+    Juaizuo.imageLoaded = imageLoaded;
+    Juaizuo.queryElemsByIds = queryElemsByIds;
+    Juaizuo.getDateTime = getDateTime;
+    Juaizuo.httpData2Str = httpData2Str;
+    Juaizuo.httpTip = httpTip;
+    Juaizuo.offlineStore = offlineStore;
+    Juaizuo.json2Str = json2Str;
+    Juaizuo.str2Json = str2Json;
 }(window));
