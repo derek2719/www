@@ -338,7 +338,24 @@ span.add.a.curr s {
 	background-color: #fff;
 	border:1px solid #ccc;
 }
-.mlist li:nth-child(2n) .l {
+
+.mlist li .l.mright {
+ float: right;
+}
+.mlist li .r.mright {
+ margin-right: 50px;
+ margin-left:50px;
+ text-align: right;
+}
+.mlist li .r.mright p {
+ border-radius: 3px;
+ background-color: #f1fdff;
+ border: 1px solid #00d5f5;
+ color: #00d5f5;
+ text-align:left
+}
+
+/*.mlist li:nth-child(2n) .l {
  float: right;
 }
 .mlist li:nth-child(2n) .r {
@@ -352,12 +369,16 @@ span.add.a.curr s {
  border: 1px solid #00d5f5;
  color: #00d5f5;
  text-align:left
-}
+}*/
+
+
+
+
 .m-inp-box {
-	position:absolute;
-	left:0;
+	position: relative;
+/*	left:0;
 	right:0;
-	bottom:0
+	bottom:0*/
 }
 .m-inp {
 	margin:6px 80px 6px 10px;
@@ -380,7 +401,6 @@ span.add.a.curr s {
 }
 .nxx {
 	position:relative;
-	max-width:320px;
 	margin:0 auto;
 	z-index:99
 }
@@ -411,6 +431,8 @@ span.add.a.curr s {
 	width:80px;
 	height:80px;
 	-webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, .2);
+	border:1px solid #fff;
+		border-radius:3px;
 }
 .nc {
 	height:34px;
@@ -513,7 +535,7 @@ span.add.a.curr s {
 	position:absolute;
 	right:5px;
 	top:0;
-	height:20px;
+	height:36px;
 }
 .l-r a.z, .l-r a.f, .l-r a.g {
 	float:left;
@@ -933,3 +955,5 @@ ul.cg li.curr {
 	color:#fff;
 	background-color:#00D5F5
 }
+.bblue{background-color: #00D5F5;
+color: #FFF;}

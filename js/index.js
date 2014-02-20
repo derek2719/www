@@ -35,6 +35,10 @@
         //ID元素对象集合,关注列表、粉丝列表
         this.elems = {
             "productlistid" : null,
+            "refreshbtn" : null,
+            "loadmorebtn" : null,
+            "prompt_mask" : null,
+            "headerselect" : null,
             "detailsurl" : null
         };
         //当点击请求提示框的关闭按钮，意味着中断请求，在关闭提示框后，如果请求得到响应，也不进行下一步业务处理。
@@ -67,11 +71,77 @@
         initEvents : function() {
             var me = this,
                 productlistElem = me.elems["productlistid"],
+                refreshbtnElem = me.elems["refreshbtn"],
+                loadmorebtnElem = me.elems["loadmorebtn"],
+                headerselectbtnElem = me.elems["headerselect"],               
                 detailbtnElem = me.elems["detailsurl"];
-
+            //显示分类标签 
+            headerselectbtnElem.onbind("touchstart",me.headerselectbtnDown,me);
+            headerselectbtnElem.onbind("touchend",me.headerselectbtnUp,me);
+            //promptmaskbtnElem.show();
             //详情按钮
             detailbtnElem.onbind("touchend",me.detailbtnUp,me);
-        },        
+            //刷新按钮
+            refreshbtnElem.onbind("touchstart",me.btnDown,refreshbtnElem);
+            refreshbtnElem.onbind("touchend",me.refreshbtnUp,me);
+            //加载更多按钮
+            loadmorebtnElem.onbind("touchstart",me.loadmorebtnDown,loadmorebtnElem);
+            loadmorebtnElem.onbind("touchend",me.loadmorebtnUp,me);
+        },       
+        /**
+         * 按钮按下事件处理器
+         * @param  {Event} evt
+         */
+        btnDown : function(evt) {
+            this.addClass("curr");
+        }, 
+        /**
+         * 按钮按下事件处理器
+         * @param  {Event} evt
+         */
+        headerselectbtnDown : function(evt) {
+            var me = this,
+                elem = evt.currentTarget;
+                promptmaskbtnElem = me.elems["prompt_mask"];
+
+                $(elem).addClass("spread");
+                promptmaskbtnElem.show();
+
+        }, 
+        /**
+         * 按钮按下事件处理器
+         * @param  {Event} evt
+         */
+        headerselectbtnUp : function(evt) {
+            
+        }, 
+        /**
+         * 刷新按钮
+         * @param  {Event} evt
+         */
+        refreshbtnUp : function(evt) {
+            //请求用户信息协议
+            var productList_url = BASE_URL + "ProductList";
+            var productList_data = {"mobileid" : 1,"startid" : 0,"pagenumber" : 0};
+            
+            var pm = new PageManager();
+            //初始化用户界面
+            pm.init();
+            //请求产品列表数据，填充用户界面元素
+            pm.reqProductList(productList_url, productList_data);
+        },
+        loadmorebtnDown : function(evt) {
+            this.addClass("bblue");
+        },
+        loadmorebtnUp : function(evt) {
+            var me = this,
+                elem = evt.currentTarget;
+            $(elem).removeClass("bblue");
+            var uid = me.userInfoManager.uid;
+            if (uid) {
+                me.loadmoreHander(uid);
+            }
+        },
         /**
          * 请求产品列表信息
          * @param  {String} url 服务URL
@@ -124,17 +194,12 @@
         reqProductListFail : function() {
 
         },
-        /**
-         * 请求赞按钮失败后的处理函数
-         */
-        reqPraiseFail : function() {
-
-        }
     };
 
     //基础URL
     //var BASE_URL = "http://192.168.1.245:8080/JuaizuoMobileServer/";
-    var BASE_URL = "http://127.0.0.1:8080/JuaizuoMobileServer/";
+    //var BASE_URL = "http://127.0.0.1:8080/JuaizuoMobileServer/";
+    var BASE_URL = "http://66.175.208.37:18081/JuaizuoMobileServer/";
     $(function(){
         //请求用户信息协议
         var productList_url = BASE_URL + "ProductList";

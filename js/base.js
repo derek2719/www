@@ -7,14 +7,18 @@
 
     var emptyFn = function() {};
 
+    var mobilePlatform = {
+        android : /android/i.test(navigator.userAgent),
+        ipad : /ipad/i.test(navigator.userAgent),
+        iphone : /iphone/i.test(navigator.userAgent),
+        wphone : /Windows Phone/i.test(navigator.userAgent)
+    };
+
     /**
      * 判断是否是移动平台
      */
     var isMobilePlatform = (function() {
-        var isAndroid = /android/i.test(navigator.userAgent),
-            isIpad = /ipad/i.test(navigator.userAgent),
-            isIphone = /iphone/i.test(navigator.userAgent);
-        return isAndroid || isIpad || isIphone;
+        return mobilePlatform.android || mobilePlatform.ipad || mobilePlatform.iphone || mobilePlatform.wphone;
     })();
 
     /**
@@ -79,7 +83,7 @@
      * opts属性：
      * success ：图片加载成功后的回调函数
      * fail ：图片加载失败后的回调函数
-     * scope ：回调函数的作用域，默认是Juaizuo对象
+     * scope ：回调函数的作用域，默认是Trafficeye对象
      */
     function imageLoaded (imgElem, imgUrl, opts) {
         if (!imgElem) {
@@ -121,14 +125,45 @@
      * @param {JSON Object} data JSON对象
      * @return {String}
      */
-    function json2Str(data) {
-        if (data) {
-            var strs = ['{'];
-            for (var k in data) {
-                strs.push('"' + k + '":"' + (data[k] || null) + '",')
-            }
-            var str = strs.join("");
-            return str.substr(0, str.length - 1) + '}';
+    function json2Str(obj) {
+        if (obj) {
+            // var strs = ['{'];
+            // for (var k in data) {
+            //     strs.push('"' + k + '":"' + (data[k] || null) + '",')
+            // }
+            // var str = strs.join("");
+            // return str.substr(0, str.length - 1) + '}';
+            switch(typeof(obj)){   
+                case 'string':   
+                    return '"' + obj.replace(/(["\\])/g, '\\$1') + '"';   
+                case 'array':   
+                    return '[' + obj.map(json2Str).join(',') + ']';   
+                case 'object':   
+                     if(obj instanceof Array){   
+                        var strArr = [];   
+                        var len = obj.length;   
+                        for(var i=0; i<len; i++){   
+                            strArr.push(json2Str(obj[i]));   
+                        }   
+                        return '[' + strArr.join(',') + ']';   
+                    }else if(obj==null){   
+                        return 'null';   
+                    }else{   
+                        var string = [];   
+                        for (var property in obj) {
+                            var objVal = json2Str(obj[property]);
+                            if (objVal == undefined) {
+                                objVal = null;
+                            }
+                            string.push(json2Str(property) + ':' + objVal);
+                        }   
+                        return '{' + string.join(',') + '}';   
+                    }   
+                case 'number':   
+                    return obj;   
+                case false:   
+                    return obj;   
+            }   
         }
     };
 
@@ -174,7 +209,7 @@
     });
 
     var httpTip = {
-        tipHTML : "<div id='httptipid' class='prompt_mask' style='position:fixed;'><div class='p_load'><div class='loadimg'><span></span></div><div class='loadtext'>正在加载...</div><div id='closedtipbtn' class='loadqx'></div></div></div>",
+        tipHTML : "<div id='httptipid' class='prompt_mask' style='position:fixed;z-index:1000;'><div class='p_load'><div class='loadimg'><span></span></div><div class='loadtext'>正在加载...</div><div id='closedtipbtn' class='loadqx'></div></div></div>",
         isOpened : false,
         isInit : false,
         tipElem : null,
@@ -251,7 +286,7 @@
          * @private
          */
         get : function(key) {
-            return isEnableStore && this._isExist_(key) ? localStore.getItem(key) : false;
+            return isEnableStore && this.isExist(key) ? localStore.getItem(key) : false;
         },
         /**
          * 根据关键字判断是否有本地存储
@@ -264,6 +299,92 @@
         }
     };
 
+    /**
+     * 分页管理器类
+     */
+    function PageNumManager() {
+        //分页起始条目
+        this.start = 0;
+        //每页显示个数
+        this.BASE_NUM = 10;
+        //是否显示加载更多按钮
+        this.isShowBtn = false;
+    };
+    PageNumManager.prototype = {
+        /**
+         * 重置分页管理信息
+         */
+        reset : function() {
+            this.start = 0;
+            this.isShowBtn = false;
+        },
+        getStart : function() {
+            return this.start;
+        },
+        getEnd : function() {
+            return this.BASE_NUM + this.start - 1;
+        },
+        setIsShowBtn : function(flag) {
+            this.isShowBtn = flag;
+        },
+        getIsShowBtn : function() {
+            return this.isShowBtn;
+        }
+    };
+
+    function reqPraiseServer(uid, friendid, publishid, pid, reqType) {
+        var BASE_URL = "http://mobile.Juaizuo.com.cn:8008/TrafficeyeCommunityService/sns/v1/praise";
+        var data = {
+            "uid" : uid,
+            "friend_id" : friendid,
+            "publish_id" : publishid,
+            "type" : "event",
+            "pid" : pid,
+            "requestType" : reqType
+        };
+        var reqParams = httpData2Str(data);
+        var reqUrl = BASE_URL + reqParams;
+        $.ajaxJSONP({
+            url : reqUrl,
+            success: function(){}
+        })
+    };
+
+    /**
+     * 从本地存储获取用户信息对象
+     *
+     * {
+    "username": "傲梅雪舞", //用户昵称
+    "avatar": "http://mobile.Juaizuo.com.cn/media/test/avatars/22376/image.jpg", //用户头像图片
+    "gender": "F", //用户性别
+    "usertype": "1", //用户类型
+    "friends_count": "4", //用户关注数量
+    "followers_count": "0", //用户粉丝数量
+    "uid": 22376, //用户ID
+    "pid": 353617052835307 //用户PID
+}
+     */
+    function getMyInfo() {
+        var myInfoStr = offlineStore.get("traffic_myinfo");
+        return str2Json(myInfoStr);
+    };
+
+    /**
+     * 跳转页面
+     * @param  {[type]} url [description]
+     * @return {[type]}     [description]
+     */
+    function toPage(url) {
+        if (url) {
+            setTimeout(function() {
+                window.location.href = url;
+            }, 1);
+        }
+    };
+
+    Juaizuo.pageManager = null;
+    Juaizuo.PageNumManager = PageNumManager;
+    Juaizuo.mobilePlatform = mobilePlatform;
     Juaizuo.imageLoaded = imageLoaded;
     Juaizuo.queryElemsByIds = queryElemsByIds;
     Juaizuo.getDateTime = getDateTime;
@@ -272,4 +393,7 @@
     Juaizuo.offlineStore = offlineStore;
     Juaizuo.json2Str = json2Str;
     Juaizuo.str2Json = str2Json;
+    Juaizuo.reqPraiseServer = reqPraiseServer;
+    Juaizuo.getMyInfo = getMyInfo;
+    Juaizuo.toPage = toPage;
 }(window));
