@@ -39,7 +39,14 @@
             "loadmorebtn" : null,
             "prompt_mask" : null,
             "headerselect" : null,
-            "detailsurl" : null
+            "detailsurl" : null,
+            "all_id" : null,
+            "today_id" : null,
+            "beauty_id" : null,
+            "gender_id" : null,
+            "friend_id" : null,
+            "updatetime" : null,
+            "joke_id" : null
         };
         //当点击请求提示框的关闭按钮，意味着中断请求，在关闭提示框后，如果请求得到响应，也不进行下一步业务处理。
         this.isStopReq = false;
@@ -73,7 +80,8 @@
                 productlistElem = me.elems["productlistid"],
                 refreshbtnElem = me.elems["refreshbtn"],
                 loadmorebtnElem = me.elems["loadmorebtn"],
-                headerselectbtnElem = me.elems["headerselect"],               
+                headerselectbtnElem = me.elems["headerselect"], 
+                updatetimeElem = me.elems["updatetime"],                
                 detailbtnElem = me.elems["detailsurl"];
             //显示分类标签 
             headerselectbtnElem.onbind("touchstart",me.headerselectbtnDown,me);
@@ -87,6 +95,9 @@
             //加载更多按钮
             loadmorebtnElem.onbind("touchstart",me.loadmorebtnDown,loadmorebtnElem);
             loadmorebtnElem.onbind("touchend",me.loadmorebtnUp,me);
+            //最后更新时间
+            var mydate = new Date();
+            updatetimeElem.html("最后更新时间:"+mydate.toLocaleString());
         },       
         /**
          * 按钮按下事件处理器
@@ -127,6 +138,7 @@
             var pm = new PageManager();
             //初始化用户界面
             pm.init();
+            pm.initEvents();
             //请求产品列表数据，填充用户界面元素
             pm.reqProductList(productList_url, productList_data);
         },

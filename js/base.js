@@ -354,18 +354,18 @@
      * 从本地存储获取用户信息对象
      *
      * {
-    "username": "傲梅雪舞", //用户昵称
-    "avatar": "http://mobile.Juaizuo.com.cn/media/test/avatars/22376/image.jpg", //用户头像图片
-    "gender": "F", //用户性别
-    "usertype": "1", //用户类型
-    "friends_count": "4", //用户关注数量
-    "followers_count": "0", //用户粉丝数量
-    "uid": 22376, //用户ID
-    "pid": 353617052835307 //用户PID
-}
+            "username": "聚爱座", //用户昵称
+            "avatar": "http://mobile.Juaizuo.com.cn/media/test/avatars/22376/image.jpg", //用户头像图片
+            "gender": "F", //用户性别，F,M
+            "usertype": "1", //用户类型
+            "phonenumber": "13581605985", //手机号
+            "email": "", //邮箱
+            "uid": 22376, //用户ID
+            "uuid": 353617052835307 //用户设备的id信息
+        }
      */
     function getMyInfo() {
-        var myInfoStr = offlineStore.get("traffic_myinfo");
+        var myInfoStr = offlineStore.get("juaizuo_myinfo");
         return str2Json(myInfoStr);
     };
 

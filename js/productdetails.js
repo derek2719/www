@@ -68,6 +68,7 @@
             "praiseavatarlistid" : null,
             "inputtext" : null,
             "inputbtn" : null,
+            "title" : null,
             "commentslistid" : null
         };
         //当点击请求提示框的关闭按钮，意味着中断请求，在关闭提示框后，如果请求得到响应，也不进行下一步业务处理。
@@ -94,7 +95,7 @@
         initElems : function() {
             var me = this,
                 elems = me.elems;
-            me.elems = Trafficeye.queryElemsByIds(elems);
+            me.elems = Juaizuo.queryElemsByIds(elems);
         },
         /**
          * 初始化页面元素事件
